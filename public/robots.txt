@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://azws.it
+
+# Sitemaps
+Sitemap: https://azws.it/sitemap.xml
