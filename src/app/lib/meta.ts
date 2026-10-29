@@ -10,7 +10,10 @@ export function buildMetadata(lang: Lang): Metadata {
     description: c.description,
     authors: [{ name: "Antonio Zuccon Ghiotto" }],
     alternates: { canonical: url, languages: { en: "/", it: "/it", "x-default": "/" } },
-    openGraph: { title: c.title, description: c.description, url, siteName: "Antonio Zuccon Ghiotto", locale: lang === "it" ? "it_IT" : "en_GB", type: "website" },
+    openGraph: { title: c.title, description: c.description, url, siteName: "Antonio Zuccon Ghiotto", locale: lang === "it" ? "it_IT" : "en_GB", type: "website",
+      images: [{ url: `https://azws.it/og-${lang}.png`, width: 1200, height: 630, alt: c.title, type: "image/png" }],
+    },
+    twitter: { card: "summary_large_image", title: c.title, description: c.description, images: [`https://azws.it/og-${lang}.png`] },
   };
 }
 
