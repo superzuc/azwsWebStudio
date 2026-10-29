@@ -1,69 +1,78 @@
-"use client"; // Questa riga indica che il codice viene eseguito solo sul client
+"use client";
 
-import React, { useState } from 'react';
-import { urlFor } from '../lib/sanityImage';
-import { Data } from '../../../types';
+import { useState } from "react";
+import type { Content } from "../lib/content";
 
-type Props = {
-    data: Data
-}
+type Props = { form: Content["contactSection"]["form"]; email: string };
+type Status = "idle" | "sending" | "sent" | "error";
 
-export default function ContactForm( { data }: Props) {
-  const [formSubmitted, setFormSubmitted] = useState(false); // Stato per il modale
+const endpoint = process.env.NEXT_PUBLIC_FORMSPREE_URL;
 
-  // Funzione per gestire l'invio del form
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = event.currentTarget;
+export default function ContactForm({ form, email }: Props) {
+  const [status, setStatus] = useState<Status>("idle");
 
-    // Invia il form a Formspree
-    const response = await fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form),
-      headers: { 'Accept': 'application/json' },
-    });
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formEl = e.currentTarget;
+    const data = new FormData(formEl);
 
-    if (response.ok) {
-      setFormSubmitted(true); // Mostra il modale se l'invio ha avuto successo
-    } else {
-      alert("C'è stato un errore, riprova.");
+    if (!endpoint) {
+      const subject = encodeURIComponent(`azws.it – ${data.get("name")}`);
+      const body = encodeURIComponent(`${data.get("message")}\n\n${data.get("name")} – ${data.get("email")}`);
+      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+      return;
     }
-  };
+
+    setStatus("sending");
+    try {
+      const res = await fetch(endpoint, { method: "POST", body: data, headers: { Accept: "application/json" } });
+      setStatus(res.ok ? "sent" : "error");
+      if (res.ok) {
+        formEl.reset();
+        window.gtag?.("event", "generate_lead", { method: "contact_form" });
+      }
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  if (status === "sent") {
+    return (
+      <div role="status" className="rounded-2xl border border-line bg-panel p-8">
+        <p className="font-display text-2xl font-bold text-win">{form.sent}</p>
+        <p className="mt-2 text-muted">{form.sentBody}</p>
+      </div>
+    );
+  }
+
+  const field = "mt-2 w-full rounded-xl border border-line bg-panel px-4 py-3 text-ink placeholder:text-control focus:border-variant focus:outline-none";
 
   return (
-    <>
-      {formSubmitted ? (
-        
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded shadow-lg text-center">
-            <h2 className="text-2xl font-bold mb-4">Richiesta Inviata</h2>
-            <p className="text-lg mb-6">
-              La tua richiesta è stata inviata correttamente. Ti risponderò il prima possibile. Grazie per avermi contattato!
-            </p>
-            <a href="/" className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700">
-              Torna alla Home
-            </a>
-          </div>
-        </div>
-      ) : (
-        
-        <section id="contact" className='bg-center bg-contain bg-no-repeat' style={{ backgroundImage: `url(${urlFor(data.backimage5.asset)})` }}>  
-        <form action={process.env.NEXT_PUBLIC_FORMSPREE_URL} method="POST" className="max-w-xl mx-auto space-y-4" onSubmit={handleSubmit}>
-          <div>
-            <input placeholder="Nome" type="text" name="name" required className="w-full px-4 py-2 border border-gray-300 rounded" />
-          </div>
-          <div>
-            <input placeholder="Email" type="email" name="_replyto" required className="w-full px-4 py-2 border border-gray-300 rounded" />
-          </div>
-          <div>
-            <textarea placeholder="Messaggio" name="message" required className="w-full px-4 py-2 border border-gray-300 rounded h-32"></textarea>
-          </div>
-          <button type="submit" className="w-full bg-red-600 text-white py-3 px-6 rounded hover:bg-red-700 transition">
-            Invia Richiesta
-          </button>
-        </form>
-        </section>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <label className="block">
+        <span className="text-sm font-semibold">{form.name}</span>
+        <input name="name" type="text" required autoComplete="name" className={field} />
+      </label>
+      <label className="block">
+        <span className="text-sm font-semibold">{form.email}</span>
+        <input name="email" type="email" required autoComplete="email" className={field} />
+      </label>
+      <label className="block">
+        <span className="text-sm font-semibold">{form.message}</span>
+        <textarea name="message" required rows={5} className={field} />
+      </label>
+      {status === "error" && (
+        <p role="alert" className="text-sm font-semibold text-red-600 dark:text-red-400">
+          {form.error}
+        </p>
       )}
-    </>
+      <button
+        type="submit"
+        disabled={status === "sending"}
+        className="w-full rounded-full bg-variant px-6 py-3 font-semibold text-white transition-colors hover:bg-ink disabled:opacity-60 dark:text-paper sm:w-auto"
+      >
+        {status === "sending" ? form.sending : form.send}
+      </button>
+    </form>
   );
 }
