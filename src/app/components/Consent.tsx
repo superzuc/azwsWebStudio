@@ -74,7 +74,7 @@ const copy = {
 };
 
 export const OPEN_EVENT = "azws:open-consent";
-
+//for new consent mechanism
 export default function Consent({ lang }: { lang: Lang }) {
   const [open, setOpen] = useState(false);
   const t = copy[lang];
