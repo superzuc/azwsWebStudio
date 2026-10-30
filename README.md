@@ -3,7 +3,7 @@
 Next.js 14 (App Router), Tailwind, nessun CMS: tutti i testi stanno in `src/app/lib/content.ts` (italiano e inglese).
 
 - `/` inglese, `/it` italiano, `/projects` reindirizza a `/#projects`
-- Form contatti: Formspree tramite `NEXT_PUBLIC_FORMSPREE_URL` (senza variabile apre l'email)
+- Form contatti: `/api/contact` usa Resend per mandare la notifica a webstudio.azws@gmail.com e una risposta automatica a chi scrive. Template in `src/app/lib/emails.ts`
 
 ## Sviluppo
     npm install
@@ -12,7 +12,7 @@ Next.js 14 (App Router), Tailwind, nessun CMS: tutti i testi stanno in `src/app/
 ## Pubblicazione su Vercel
 1. Push del repo su GitHub
 2. vercel.com → Add New Project → importa il repo (preset Next.js)
-3. Environment Variables: `NEXT_PUBLIC_FORMSPREE_URL` e `NEXT_PUBLIC_GA_ID` (ID di misurazione GA4, `G-XXXXXXX`)
+3. Environment Variables: `RESEND_API_KEY`, `RESEND_FROM` (es. `Antonio Zuccon Ghiotto <hello@azws.it>`, dominio verificato su Resend) e `NEXT_PUBLIC_GA_ID` (ID di misurazione GA4, `G-XXXXXXX`)
 4. Settings → Domains → aggiungi `azws.it` e `www.azws.it`, poi imposta i DNS indicati da Vercel presso il registrar
 
 ## Analytics e cookie

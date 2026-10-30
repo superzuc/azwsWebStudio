@@ -6,26 +6,21 @@ import type { Content } from "../lib/content";
 type Props = { form: Content["contactSection"]["form"]; email: string };
 type Status = "idle" | "sending" | "sent" | "error";
 
-const endpoint = process.env.NEXT_PUBLIC_FORMSPREE_URL;
-
 export default function ContactForm({ form, email }: Props) {
   const [status, setStatus] = useState<Status>("idle");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formEl = e.currentTarget;
-    const data = new FormData(formEl);
-
-    if (!endpoint) {
-      const subject = encodeURIComponent(`azws.it – ${data.get("name")}`);
-      const body = encodeURIComponent(`${data.get("message")}\n\n${data.get("name")} – ${data.get("email")}`);
-      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-      return;
-    }
+    const data = Object.fromEntries(new FormData(formEl));
 
     setStatus("sending");
     try {
-      const res = await fetch(endpoint, { method: "POST", body: data, headers: { Accept: "application/json" } });
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, page: window.location.href }),
+      });
       setStatus(res.ok ? "sent" : "error");
       if (res.ok) {
         formEl.reset();
@@ -61,9 +56,11 @@ export default function ContactForm({ form, email }: Props) {
         <span className="text-sm font-semibold">{form.message}</span>
         <textarea name="message" required rows={5} className={field} />
       </label>
+      <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
       {status === "error" && (
         <p role="alert" className="text-sm font-semibold text-red-600 dark:text-red-400">
-          {form.error}
+          {form.error}{" "}
+          <a href={`mailto:${email}`} className="underline">{email}</a>
         </p>
       )}
       <button

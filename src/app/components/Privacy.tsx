@@ -17,7 +17,7 @@ const sections: Record<Lang, { title: string; back: string; intro: string; block
         h: "Modulo di contatto",
         p: [
           "Quando mi scrivi dal modulo raccolgo nome, email e messaggio, solo per risponderti. La base giuridica è la tua richiesta (art. 6.1.b GDPR).",
-          "Il modulo è gestito da Formspree (Formspree Inc., USA), che trasferisce i dati negli Stati Uniti con le garanzie previste dal GDPR (EU-US Data Privacy Framework o clausole contrattuali standard). Conservo i messaggi per il tempo necessario a gestire la richiesta e al massimo 24 mesi.",
+          "Il messaggio viene inviato alla mia casella email tramite Resend (Resend Inc., USA), che invia anche a te una conferma automatica di ricezione. Resend tratta i dati negli Stati Uniti con le garanzie previste dal GDPR (EU-US Data Privacy Framework o clausole contrattuali standard). Conservo i messaggi per il tempo necessario a gestire la richiesta e al massimo 24 mesi.",
         ],
       },
       {
@@ -52,7 +52,7 @@ const sections: Record<Lang, { title: string; back: string; intro: string; block
         h: "Contact form",
         p: [
           "When you write to me through the form I collect your name, email and message, only to reply. The legal basis is your request (Art. 6(1)(b) GDPR).",
-          "The form is run by Formspree (Formspree Inc., USA), which transfers data to the United States under GDPR safeguards (EU-US Data Privacy Framework or standard contractual clauses). I keep messages as long as needed to handle your request, and no longer than 24 months.",
+          "Your message is delivered to my inbox through Resend (Resend Inc., USA), which also sends you an automatic confirmation. Resend processes data in the United States under GDPR safeguards (EU-US Data Privacy Framework or standard contractual clauses). I keep messages as long as needed to handle your request, and no longer than 24 months.",
         ],
       },
       {
