@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { autoReplyEmail, notificationEmail, type Lead } from "@/app/lib/emails";
+import { contact } from "@/app/lib/content";
 
 export const runtime = "nodejs";
 
@@ -67,7 +68,7 @@ export async function POST(req: Request) {
   const auto = await resend.emails.send({
     from: FROM,
     to: lead.email,
-    replyTo: TO,
+    replyTo: contact.email,
     subject: reply.subject,
     html: reply.html,
     text: reply.text,

@@ -3,6 +3,7 @@
 Next.js 14 (App Router), Tailwind, nessun CMS: tutti i testi stanno in `src/app/lib/content.ts` (italiano e inglese).
 
 - `/` inglese, `/it` italiano, `/projects` reindirizza a `/#projects`
+- Posta in arrivo: le mail a hello@azws.it (Resend Receiving) arrivano al webhook `/api/inbound`, che le inoltra a webstudio.azws@gmail.com con mittente in reply-to e allegati. Variabile `RESEND_WEBHOOK_SECRET`
 - Form contatti: `/api/contact` usa Resend per mandare la notifica a webstudio.azws@gmail.com e una risposta automatica a chi scrive. Template in `src/app/lib/emails.ts`
 
 ## Sviluppo

@@ -1,7 +1,7 @@
 export type Lang = "it" | "en";
 
 export const contact = {
-  email: "webstudio.azws@gmail.com",
+  email: "hello@azws.it",
   phone: "+39 349 323 8483",
   linkedin: "https://www.linkedin.com/in/antonio-zuccon-ghiotto-82a86422a",
   github: "https://github.com/superzuc",
